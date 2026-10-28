@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function role() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role; }
+    function editor() { return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && role() == 'editor'; }
+
+    // Who can edit. Managed only from the Firebase console, never from the portal.
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+    // Everything else: anyone signed in can view, only editors can change.
+    match /{col}/{doc=**} {
+      allow read: if signedIn() && col != 'users';
+      allow write: if editor() && col != 'users';
+    }
+  }
+}

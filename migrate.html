@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal data migration</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<style>
+body{font-family:system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 20px;color:#1d1f20}
+h1{font-size:22px;text-transform:uppercase;letter-spacing:.06em;border-bottom:3px solid #c8102e;padding-bottom:8px}
+input,button{font:inherit;padding:8px 10px}button{background:#c8102e;color:#fff;border:0;cursor:pointer}button:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}pre{background:#f3f3f1;padding:12px;white-space:pre-wrap;font-size:13px}
+.ok{color:#1f7a3f}.bad{color:#a30d24}
+</style></head><body>
+<h1>One-time data migration</h1>
+<p>Copies the backup from the claude.ai portal into Firestore. Run it once, signed in as an <b>editor</b>. Running it again just overwrites the same documents with the same data.</p>
+<div id="signin" class="row"><input id="em" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password"><button id="go">Sign in</button></div>
+<div id="step2" hidden>
+  <p>Signed in as <b id="who"></b>. Choose <b>elbow-portal-backup-2026-10-28.json</b>:</p>
+  <div class="row"><input id="file" type="file" accept=".json"><button id="run" disabled>Copy into Firestore</button></div>
+</div>
+<pre id="log">Waiting to sign in…</pre>
+<script>
+firebase.initializeApp(window.CFI_FIREBASE);
+const auth = firebase.auth(), db = firebase.firestore(), $ = q => document.querySelector(q), log = t => { $("#log").textContent += "\n" + t; };
+let bundle = null;
+$("#go").onclick = async () => { try { await auth.signInWithEmailAndPassword($("#em").value.trim(), $("#pw").value); } catch (e) { log("Sign-in failed: " + e.code); } };
+auth.onAuthStateChanged(async u => {
+  if (!u) return; $("#signin").hidden = true; $("#step2").hidden = false; $("#who").textContent = u.email;
+  const me = await db.doc("users/" + u.uid).get().catch(() => null);
+  $("#log").textContent = me && me.exists && me.data().role === "editor" ? "Signed in as an editor. Choose the backup file." :
+    "This account is not an editor yet. In the Firebase console, add a document users/" + u.uid + " with the field role = editor, then reload this page.";
+});
+$("#file").onchange = async e => {
+  try { bundle = JSON.parse(await e.target.files[0].text()); } catch { return log("That file isn't valid JSON."); }
+  if (bundle.format !== "elbow-portal-backup-v1") return log("That isn't the portal backup file.");
+  const by = {}; for (const k of Object.keys(bundle.docs)) { const c = k.split("/")[0]; by[c] = (by[c] || 0) + 1; }
+  log(`Backup has ${bundle.count} documents: ` + Object.entries(by).map(([c, n]) => `${c} ${n}`).join(", ")); $("#run").disabled = false;
+};
+$("#run").onclick = async () => {
+  $("#run").disabled = true; const keys = Object.keys(bundle.docs); let done = 0;
+  try {
+    for (let i = 0; i < keys.length; i += 200) {
+      const b = db.batch(); for (const k of keys.slice(i, i + 200)) b.set(db.doc(k), bundle.docs[k]); await b.commit();
+      done += Math.min(200, keys.length - i); log(`Copied ${done} of ${keys.length}…`);
+    }
+    log("Checking every document…"); let miss = 0;
+    for (const k of keys) { const s = await db.doc(k).get(); if (!s.exists || JSON.stringify(s.data()).length < JSON.stringify(bundle.docs[k]).length * 0.9) { miss++; log("  problem: " + k); } }
+    log(miss ? `<!> ${miss} documents didn't match. Send me this log.` : `All ${keys.length} documents are in Firestore and match the backup. Migration complete.`);
+    $("#log").className = miss ? "bad" : "ok";
+  } catch (e) { log("Stopped: " + (e.code || e.message) + ". Nothing is lost; fix the issue and run it again."); $("#log").className = "bad"; $("#run").disabled = false; }
+};
+</script></body></html>
