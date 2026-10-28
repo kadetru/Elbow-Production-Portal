@@ -3391,12 +3391,13 @@ async function saveRec(old, f) {
       if (i < 0) { toast("That record was changed by someone else. Reload and try again."); return false; }
       base = d.rows[i]; d.rows.splice(i, 1);
       if (f && f.date === old.date) d.rows.push(build(base, d.rows));
+      d.touched = [...new Set([...(d.touched || []), `${old.shift}|${+old.bender}`, ...(f && f.date === old.date ? [`${f.shift}|${+f.bender}`] : [])])];   // the daily sync leaves hand-edited bender-shifts alone
       d.updatedAt = stamp; await ref.set(d); P.days.set(old.date, d);
     }
     if (f && (!old || f.date !== old.date)) {
       const ref = P.db.doc(`days/${f.date}`), snap = await ref.get();
       const d = snap.exists ? clone(snap.data()) : { date: f.date, rows: [] };
-      d.rows.push(build(base, d.rows)); d.date = f.date; d.updatedAt = stamp; await ref.set(d); P.days.set(f.date, d);
+      d.rows.push(build(base, d.rows)); d.date = f.date; d.touched = [...new Set([...(d.touched || []), `${f.shift}|${+f.bender}`])]; d.updatedAt = stamp; await ref.set(d); P.days.set(f.date, d);
     }
     rebuild();
     toast(!f ? "Record deleted." : old ? "Changes saved." : "Record added.");
