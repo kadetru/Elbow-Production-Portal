@@ -1,0 +1,3 @@
+elbow-portal-backup-*.json
+*serviceAccount*.json
+.claude/
