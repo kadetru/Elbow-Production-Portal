@@ -259,7 +259,7 @@ input::placeholder{color:var(--faint)}
 input:not([type=checkbox]):not([type=radio]):not([type=file]):focus,select:focus{border-color:var(--steel);outline:2px solid var(--steel-tint);outline-offset:0}
 .band select:focus{outline-color:rgba(255,255,255,.25);border-color:#fff}
 input[type=checkbox]{width:20px;height:20px;accent-color:var(--ink);margin:0}
-input.mono,select.mono,.rangebar select,.daterange select,.editgrid input,.editgrid select{font-family:var(--mono);font-size:14px}
+input.mono,select.mono,.editgrid input,.editgrid select{font-family:var(--mono);font-size:14px}
 /* segmented choice (7 days / 30 days, Day / Night) */
 .seg{display:inline-flex;height:calc(var(--ctl) + 2px);border:1px solid var(--ink)}   /* +2px so the buttons inside the border are a full 44px */
 .seg button{height:100%;padding:0 18px;border:0;background:var(--white);font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
@@ -270,7 +270,7 @@ input.mono,select.mono,.rangebar select,.daterange select,.editgrid input,.editg
 .chiprow+.chiprow{margin-top:6px}
 .chip2{min-height:var(--ctl-row);padding:0 11px;border:1px solid var(--line-strong);background:var(--white);font-family:var(--mono);font-size:13px;color:var(--ink)}
 .chip2[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
-.cgrid{display:grid;gap:6px}
+.cgrid{display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:6px}
 .cgrid .chip2{width:100%;text-align:center}
 .groupby{display:flex;align-items:center;gap:10px;font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
 .groupby select{font-family:var(--sans);letter-spacing:0;text-transform:none;border-color:var(--ink)}
@@ -400,27 +400,58 @@ td.better{font-weight:700;color:var(--st-good)}
 
 /* ---------- 10. FILTERS ---------- */
 .frail.top{background:var(--white);box-shadow:var(--e1);margin-bottom:var(--s4)}
-.fhead{display:flex;align-items:center;gap:14px;padding:10px 14px 10px 10px}
-.ftoggle{display:inline-flex;align-items:center;gap:9px;min-height:var(--ctl);padding:0 18px;border:1.5px solid var(--ink);border-radius:var(--r-pill);background:var(--white);font-family:var(--cond);font-weight:700;font-size:15px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink)}
+.fhead{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:10px}
+.ftoggle{display:inline-flex;align-items:center;gap:9px;min-height:var(--ctl);padding:0 16px 0 18px;border:1.5px solid var(--ink);border-radius:var(--r-pill);background:var(--white);font-family:var(--cond);font-weight:700;font-size:15px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink);transition:background-color var(--d-hover) ease,color var(--d-hover) ease,transform var(--d-press) var(--ease-out)}
 .ftoggle .fcount{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:var(--r-pill);background:var(--red);color:#fff;font-size:13px;letter-spacing:0}
-.ftoggle .chev{font-size:11px;color:var(--muted)}
-.fhead .fclear{margin-left:auto}
-.fbody{display:grid;gap:var(--s5);padding:var(--s5) var(--s5) 22px;border-top:1px solid var(--line)}
-.frow{display:grid;gap:var(--s8);align-items:start}
-.frow.r1{grid-template-columns:1.1fr 1.3fr 1.9fr .8fr}
-.frow.r2{grid-template-columns:.9fr 2.4fr 1.4fr}
-.frow.r3{grid-template-columns:1.25fr 2.75fr}
+.ftoggle .chev{font-size:11px;color:var(--muted);transition:transform var(--d-ui) var(--ease-out)}
+.frail.open .ftoggle .chev{transform:rotate(180deg)}
+.fhead .fsearch{flex:1 1 220px;max-width:360px;min-height:var(--ctl);background:var(--field)}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;flex:1 1 auto;min-width:0}
+.fchip{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 10px 0 12px;border:1px solid var(--steel-edge);border-radius:var(--r-pill);background:var(--steel-tint);color:var(--steel);font-size:13px;font-weight:600;transition:background-color var(--d-hover) ease,color var(--d-hover) ease,border-color var(--d-hover) ease}
+.fchip-k{font-family:var(--cond);font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.fchip i{font-style:normal;font-size:15px;line-height:1;opacity:.7}
+.fhead .fclear{margin-left:auto;min-height:var(--ctl);padding:0 6px}
+.fbody{display:grid;gap:var(--s6);padding:var(--s5) var(--s5) var(--s6);border-top:1px solid var(--line);
+  transition:opacity var(--d-ui) var(--ease-out),transform var(--d-ui) var(--ease-out)}
+@starting-style{.fbody{opacity:0;transform:translateY(-4px)}}
+.frow{display:grid;gap:var(--s6) var(--s8);align-items:start}
+.frow.r1{grid-template-columns:2.6fr 1.1fr 1.1fr}
+.frow.r2{grid-template-columns:3fr 1.3fr}
+.frow.r3{grid-template-columns:1.6fr 3fr}
 .frow.partial{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 .fgroup{min-width:0}
-.rail-label,.fbody .rl{margin:0 0 8px;font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
-.daterange{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.daterange select,.fbody input[type=search]{width:100%}
-.fbody input[type=search]{background:var(--field)}
-.fbody .othersearch{max-width:280px;margin-top:8px;min-height:var(--ctl-row)}
-.fchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:var(--s3)}
-.fchips:not(:has(.fchip)){display:none}                       /* nothing filtered: no empty row */
-.fchips .rl{flex-direction:row;margin-right:6px;font-family:var(--mono);font-size:12px;letter-spacing:0;color:var(--muted)}
-.fchip{min-height:34px;padding:0 13px;border:1px solid var(--steel-edge);border-radius:var(--r-pill);background:var(--steel-tint);color:var(--steel);font-size:13px;font-weight:600}
+.fglabel{display:flex;align-items:center;gap:8px;min-height:24px;margin:0 0 8px;font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.fglabel b{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:var(--r-pill);background:var(--ink);color:var(--on-ink);font-size:12px;letter-spacing:0}
+.fglabel .fgclear{margin-left:auto;font-size:12px}
+.fbody .othersearch{width:100%;max-width:260px;margin-top:8px;min-height:var(--ctl-row);background:var(--field)}
+.rail-label{margin:0 0 8px;font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+
+/* the date button and its calendar */
+.rangebtn{display:inline-flex;align-items:center;gap:10px;min-height:var(--ctl);padding:0 14px;border:1px solid var(--line-strong);background:var(--white);font-family:var(--mono);font-size:14px;color:var(--ink);white-space:nowrap;
+  transition:border-color var(--d-hover) ease,background-color var(--d-hover) ease,transform var(--d-press) var(--ease-out)}
+.rangebtn .calico{flex:none;color:var(--muted)}
+.rangebtn[aria-expanded="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.band .rangebtn{background:#17191a;border-color:var(--on-black-line);color:var(--on-black)}
+.band .rangebtn .calico{color:var(--on-black-2)}
+.band .rangebtn[aria-expanded="true"]{border-color:#fff;box-shadow:inset 0 0 0 1px #fff}
+.cal{position:absolute;z-index:70;width:min(336px,calc(100vw - 16px));padding:14px;background:var(--white);color:var(--ink);box-shadow:var(--e2);
+  transform-origin:var(--origin,50% 0);transition:opacity 180ms var(--ease-out),transform 180ms var(--ease-out)}
+@starting-style{.cal{opacity:0;transform:translateY(-4px) scale(.97)}}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cal-head b{font-family:var(--cond);font-weight:600;font-size:16px;letter-spacing:.12em;text-transform:uppercase}
+.cal-nav{width:var(--ctl);height:var(--ctl);border:0;background:none;font-size:22px;line-height:1;color:var(--ink)}
+.cal-nav:disabled{color:var(--faint)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.cal-wd{padding:4px 0 6px;text-align:center;font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+.cal-d{position:relative;height:var(--ctl);border:0;background:none;font-family:var(--mono);font-size:13px;color:var(--ink)}
+.cal-d:disabled{color:var(--faint);opacity:.55}
+.cal-d.has::after{content:"";position:absolute;left:50%;bottom:7px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--red)}
+.cal-d.in{background:var(--steel-tint)}
+.cal-d.end{background:var(--ink);color:var(--on-ink)}
+.cal-d.end::after{background:#fff}
+.cal-hint{margin:10px 0 0;font-size:12px;line-height:1.4;color:var(--muted-2)}
+.cal-foot{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.cal-foot button{flex:1 1 auto;min-height:var(--ctl-row);padding:0 10px;border:1px solid var(--line-strong);background:var(--white);font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
 
 /* ---------- 11. UPLOAD ---------- */
 /* the three steps live in the black band */
@@ -681,8 +712,9 @@ body.signed-out>*:not(.authgate):not(#toast){display:none!important}
   .rangebar{width:100%}
   .rangebar .seg{flex:1 1 100%}
   .rangebar .seg button{flex:1}
-  .rangebar .rl{flex:1 1 130px}
-  .rangebar select{width:100%}
+  .rangebar .rangebtn{flex:1 1 100%}
+  .fhead .rangebtn,.fhead .fsearch{flex:1 1 100%;max-width:none}
+  .cgrid{grid-template-columns:repeat(min(var(--cols,4),4),minmax(0,1fr))}
   .tools{width:100%}
   .tools>*{flex:1}
   .vs{grid-template-columns:1fr}
@@ -757,6 +789,10 @@ tr.hit td,table.log tr.grp td{transition:background-color 120ms ease}
   .band .seg button:not([aria-pressed="true"]):hover{color:#fff;background:rgba(255,255,255,.12)}
   .chip2:not([aria-pressed="true"]):hover{border-color:var(--ink);background:var(--field)}
   .fchip:hover{background:var(--steel);border-color:var(--steel);color:#fff}
+  .rangebtn:hover{border-color:var(--ink)}
+  .band .rangebtn:hover{border-color:#fff}
+  .cal-d:not(:disabled):not(.end):hover,.cal-nav:not(:disabled):hover{background:var(--field)}
+  .cal-foot button:hover{border-color:var(--ink);background:var(--field)}
   .vscell:hover,.insight:hover{transform:translateY(-2px);box-shadow:var(--e2);background:var(--white)}
   tr.hit:hover td{background:var(--field)}
   table.log tr.grp:hover td{background:#dededf}
@@ -847,6 +883,8 @@ tr.live-flash td{animation:liveflash 1.8s ease-out}
   .recpanel,#recdlg.hidden .recpanel{transition:opacity var(--d-ui) ease}
   #recdlg.hidden .recpanel{transform:none;opacity:0}
   #combo.hidden{transform:none}
+  .cal,.fbody{transition:opacity var(--d-ui) ease}
+  @starting-style{.cal,.fbody{transform:none}}
   .toast.hidden{transform:translateX(-50%)}
   .rank .bar i,.dbar i{transition:none}
 }
@@ -2130,7 +2168,8 @@ function toLog(patch, from, to) {
 /* ============================== charts ============================== */
 const pageWidth = id => { const el = $("#" + id); return el && el.clientWidth > 300 ? el.clientWidth : 1200; };
 // bars: value split into an accepted part and a red reject part; grey when not in the hourly reports yet
-function bars(data, { width = 900, height = 180, onClick, tip, valueLabels = true } = {}) {
+function bars(data, opts = {}) {
+  const { width = 900, height = 180, onClick, tip, valueLabels = true } = opts;
   const W = Math.max(280, width), H = height, pad = { l: 6, r: 6, t: valueLabels ? 16 : 6, b: data.some(d => d.sub) ? 34 : 22 };
   const max = Math.max(1, ...data.map(d => d.v + (d.r || 0)));             // rejects stack on top of the good pieces
   const bw = (W - pad.l - pad.r) / Math.max(1, data.length), ih = H - pad.t - pad.b;
@@ -2147,7 +2186,9 @@ function bars(data, { width = 900, height = 180, onClick, tip, valueLabels = tru
     if (valueLabels && data.length <= 16 && d.v) g.append(s("text", { x: x + w / 2, y: top - 4, "text-anchor": "middle", class: "val" }, fmt(d.v)));
     svg.append(g);
   });
-  return h("div", { class: "chartwrap" }, svg);
+  const wrap = h("div", { class: "chartwrap" }, svg);
+  wrap.redraw = hh => bars(data, { ...opts, height: hh });           // used by fillCharts
+  return wrap;
 }
 // two lines with their own axes: elbows per day (left) and yield (right)
 function dualLine(pts, { width = 900, height = 240, onClick } = {}) {
@@ -2215,6 +2256,7 @@ const effClass = e => e === null || e === undefined ? "" : e >= 1.1 ? "e-hi" : e
 
 /* ============================== shell ============================== */
 function show(page) {
+  calClose();
   if (page === "analytics" && P.anF) { P.F = P.anF; P.anF = null; }
   P.page = page;
   for (const p of ["overview", "log", "analytics", "oee", "upload"]) $("#page-" + p).classList.toggle("hidden", p !== page);
@@ -2244,11 +2286,68 @@ function kpis(a, extra = [], cls = "") {
 const card = (title, note, ...body) => h("section", { class: "card" }, h("div", { class: "card-head" }, h("h2", { class: "section-label" }, title), note ? h("span", { class: "save-note" }, note) : null), ...body);
 
 /* ============================== Overview ============================== */
-// date pickers list only the dates that have uploaded hourly reports
-function datePick(label, value, onPick) {
-  const sel = h("select", { "aria-label": label }, ...P.dates.map(d => h("option", { value: d, selected: d === value ? true : null }, L.fmtDate(d))));
-  sel.addEventListener("change", () => onPick(sel.value));
-  return h("label", { class: "rl" }, label, sel);
+/* ---- date range: one calendar popover for every page. Days with hourly reports carry a dot;
+        click a start day, then an end day. onPick(from, to, preset) — preset is "7", "30" or undefined ---- */
+const cal = { el: null, btn: null };
+const calIcon = () => s("svg", { viewBox: "0 0 16 16", width: 16, height: 16, "aria-hidden": "true", class: "calico" },
+  s("rect", { x: 1.5, y: 2.5, width: 13, height: 12, fill: "none", stroke: "currentColor", "stroke-width": 1.5 }),
+  s("path", { d: "M1.5 6.5h13M5 1v3M11 1v3", stroke: "currentColor", "stroke-width": 1.5 }));
+function rangePick(from, to, onPick, dates = P.dates) {
+  const btn = h("button", { type: "button", class: "rangebtn", "aria-haspopup": "dialog", "aria-expanded": "false", "aria-label": `Dates: ${L.fmtDate(from)} to ${L.fmtDate(to)}. Change` },
+    calIcon(), h("span", {}, `${L.fmtDate(from)} – ${L.fmtDate(to)}`));
+  btn.addEventListener("click", () => cal.btn === btn ? calClose() : calOpen(btn, from, to, onPick, dates));
+  return btn;
+}
+function calClose(refocus) {
+  if (!cal.el) return;
+  cal.el.remove(); document.removeEventListener("pointerdown", calOutside, true); document.removeEventListener("focusin", calOutside);
+  if (cal.btn) { cal.btn.setAttribute("aria-expanded", "false"); if (refocus && cal.btn.isConnected) cal.btn.focus(); }
+  cal.el = cal.btn = null;
+}
+function calOutside(e) { if (!cal.el.contains(e.target) && !cal.btn.contains(e.target)) calClose(); }
+function calOpen(btn, from, to, onPick, dates) {
+  calClose();
+  const has = new Set(dates), first = dates[0], last = dates[dates.length - 1];
+  const st = { a: from, b: to, picking: false, focus: to, view: to.slice(0, 7) };
+  const el = cal.el = h("div", { class: "cal", role: "dialog", "aria-label": "Choose dates" }); cal.btn = btn;
+  const page = btn.closest(".page");
+  const done = (a, b, preset) => { calClose(); onPick(a, b, preset); page.querySelector(".rangebtn")?.focus(); };   // the page redrew: focus its new date button
+  const draw = () => {
+    const [y, m] = st.view.split("-").map(Number), start = new Date(y, m - 1, 1), lead = (start.getDay() + 6) % 7, days = new Date(y, m, 0).getDate();
+    const iso = d => `${st.view}-${String(d).padStart(2, "0")}`, lo = st.a < st.b ? st.a : st.b, hi = st.a < st.b ? st.b : st.a;
+    const month = (n) => { const t = new Date(y, m - 1 + n, 1); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}`; };
+    const nav = (n, lab) => h("button", { type: "button", class: "cal-nav", "aria-label": lab, disabled: (n < 0 ? month(-1) < first.slice(0, 7) : month(1) > last.slice(0, 7)) ? true : null,
+      onclick: () => { st.view = month(n); draw(); } }, n < 0 ? "‹" : "›");
+    const grid = h("div", { class: "cal-grid" }, ...["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map(d => h("span", { class: "cal-wd", "aria-hidden": "true" }, d)),
+      ...Array.from({ length: lead }, () => h("span", {})),
+      ...Array.from({ length: days }, (_, i) => { const d = iso(i + 1), end = !st.picking && (d === lo || d === hi) || d === st.a;
+        return h("button", { type: "button", class: "cal-d" + (has.has(d) ? " has" : "") + (d > lo && d < hi && !st.picking ? " in" : "") + (end ? " end" : ""),
+          "data-d": d, tabindex: d === st.focus ? "0" : "-1", disabled: d < first || d > last ? true : null,
+          "aria-label": `${L.fmtDate(d)}${has.has(d) ? ", has reports" : ""}`, "aria-pressed": end ? "true" : "false",
+          onclick: () => { st.focus = d; if (!st.picking) { st.a = st.b = d; st.picking = true; draw(); } else { const [p, q] = d < st.a ? [d, st.a] : [st.a, d]; done(p, q); } } }, i + 1); }));
+    grid.addEventListener("keydown", e => {
+      const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key]; if (!step) return;
+      e.preventDefault(); const n = shiftDate(st.focus, step); if (n < first || n > last) return;
+      st.focus = n; st.view = n.slice(0, 7); draw();
+    });
+    const label = new Date(y, m - 1, 15).toLocaleString(undefined, { month: "long", year: "numeric" });
+    const preset = (n, lab) => h("button", { type: "button", onclick: () => done(n ? shiftDate(last, 1 - n) : first, last, n ? String(n) : undefined) }, lab);
+    el.replaceChildren(
+      h("div", { class: "cal-head" }, nav(-1, "Previous month"), h("b", { "aria-live": "polite" }, label), nav(1, "Next month")), grid,
+      h("p", { class: "cal-hint" }, st.picking ? `From ${L.fmtDate(st.a)}: now pick the last day.` : "Pick the first day, then the last. Dots mark days with hourly reports."),
+      h("div", { class: "cal-foot" }, preset(7, "Last 7 days"), preset(30, "Last 30 days"), preset(0, "All dates")));
+    if (el.isConnected) (el.querySelector(`[data-d="${st.focus}"]`) || el.querySelector(".cal-d:not(:disabled)"))?.focus({ preventScroll: true });   // redraw replaced the focused day
+  };
+  draw();
+  document.body.append(el);
+  const r = btn.getBoundingClientRect(), w = el.offsetWidth, left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8));
+  Object.assign(el.style, { left: `${left + window.scrollX}px`, top: `${r.bottom + window.scrollY + 6}px` });
+  el.style.setProperty("--origin", `${r.left + r.width / 2 - left}px 0`);      // grows out of its button
+  el.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); calClose(true); } });
+  document.addEventListener("pointerdown", calOutside, true);
+  document.addEventListener("focusin", calOutside);                     // Tab moved focus somewhere else on the page
+  btn.setAttribute("aria-expanded", "true");
+  (el.querySelector(`[data-d="${st.focus}"]`) || el.querySelector(".cal-d:not(:disabled)")).focus({ preventScroll: true });
 }
 const nearest = (d, dir) => dir < 0 ? (P.dates.find(x => x >= d) || P.dates[P.dates.length - 1]) : ([...P.dates].reverse().find(x => x <= d) || P.dates[0]);
 function renderOverview() {
@@ -2273,13 +2372,12 @@ function renderOverview() {
   const half = window.innerWidth <= 1000 ? W - 40 : Math.max(300, (W - 16) / 2 - 42);   // one column on tablets and phones: draw the chart full width
   const rangeBar = h("div", { class: "rangebar" },
     h("div", { class: "seg" }, ...[["7", "7 days"], ["30", "30 days"]].map(([m, lab]) => h("button", { "aria-pressed": O.mode === m ? "true" : "false", onclick: () => { O.mode = m; renderOverview(); } }, lab))),
-    datePick("From", from, v => { O.mode = "custom"; O.from = v; O.to = to; renderOverview(); }),
-    datePick("To", to, v => { O.mode = "custom"; O.from = from; O.to = v; renderOverview(); }));
+    rangePick(from, to, (a, b, preset) => { O.mode = preset || "custom"; O.from = a; O.to = b; renderOverview(); }));
   put(box,
     h("div", { class: "band" }, h("div", { class: "pagehead" }, h("h1", {}, "Overview"), rangeBar), kpis(a, [], "dash4 kcenter")),   // black hero band
     h("section", { class: "card" }, h("div", { class: "card-head" }, h("h2", { class: "section-label" }, "Elbows per day"),
         h("span", { class: "save-note" }, O.mode === "7" ? "Rejects in red. Click a day for its records." : "Labels mark the first day of each week. Click a day for its records.")),
-      bars(daily, { width: W - 40, height: O.mode === "7" ? 150 : 200, onClick: d => peek([["date", d.key]]), tip, valueLabels: O.mode === "7" })),
+      bars(daily, { width: W - 40, height: Math.round(Math.min(340, Math.max(200, (W - 40) * 0.24))), onClick: d => peek([["date", d.key]]), tip, valueLabels: O.mode === "7" })),
     h("div", { class: "pgrid" },
       card("By bender", "Elbows made, with each bender's efficiency (OEE) underneath",
         bars(byBender.map(g => { const x = oeeOf(r => r.bender === +g.key); return { key: g.key, v: g.a.units, r: g.a.rej, label: `B${g.key}`, sub: x && x.oee !== null ? pct(x.oee, 0) : "–" }; }),
@@ -2308,49 +2406,46 @@ function renderOverview() {
             return h("tr", { class: "hit", onclick: () => peek([["item", g.key]], from, to) }, h("td", { class: "mono" }, g.key),
               h("td", { class: "num" }, fmt(d.good)), h("td", { class: "num muted" }, pct(d.yield, 0)), h("td", { class: "num" }, fmt(n.good)), h("td", { class: "num muted" }, pct(n.yield, 0)),
               h("td", { class: "num" }, h("b", {}, fmt(g.a.good)))); })))))));
+  fillCharts(box);
+}
+// a bar chart beside a taller card grows to that card's height instead of leaving the bottom half empty
+function fillCharts(box) {
+  for (const wrap of box.querySelectorAll(".pgrid > .card > .chartwrap:last-child")) {
+    const svg = wrap.querySelector("svg"), card = wrap.parentNode; if (!wrap.redraw || !svg) continue;
+    const spare = card.getBoundingClientRect().bottom - parseFloat(getComputedStyle(card).paddingBottom) - wrap.getBoundingClientRect().bottom;
+    const shown = svg.getBoundingClientRect().height, H = +svg.getAttribute("height");
+    if (spare > 12 && shown) wrap.replaceWith(wrap.redraw(Math.floor((shown + spare) * H / shown)));
+  }
 }
 
-/* ============================== side filters (Production Log + Analytics) ============================== */
+/* ============================== filters (Production Log + Analytics) ==============================
+   The bar always shows the dates, the search and what is filtered; "Filters" opens the part chips. */
 function filterRail(onChange) {
-  const rail = h("aside", { class: "frail" });
-  const inputs = [datePick("From", P.F.from, v => { P.F.from = v; if (P.F.to < v) P.F.to = v; onChange(); }), datePick("To", P.F.to, v => { P.F.to = v; if (P.F.from > v) P.F.from = v; onChange(); })];
-  rail.append(h("div", { class: "rail-label" }, "Dates"), h("div", { class: "daterange" }, ...inputs));
-  const q = h("input", { type: "search", placeholder: "Item, SO # or size", value: P.F.q, "aria-label": "Search" });
-  q.addEventListener("change", () => { clearTimeout(filterRail.t); if (P.F.q === q.value) return; P.F.q = q.value; onChange(); });
-  // ...and also as you type, 300 ms after the last key. The page is redrawn, so the cursor is put back in the new box.
-  q.addEventListener("input", () => { clearTimeout(filterRail.t); filterRail.t = setTimeout(() => {
-    if (P.F.q === q.value) return;
-    P.F.q = q.value; onChange();
-    const box = document.querySelector(".page:not(.hidden) .fbody input[type=search]:not(.othersearch)");
-    if (box) { box.focus(); box.setSelectionRange(box.value.length, box.value.length); }
-  }, 300); });
-  rail.append(h("div", { class: "rail-label" }, "Search"), q);
   const label = (k, v) => k === "shift" ? (+v === 1 ? "Day" : "Night") : k === "dia" ? v + '"' : k === "deg" ? v + "°" : k === "type" ? prettyType(v) : v;
   const COMMON = {
     type: ["IPS", "ID", "PHENOLICIPS", "PHENOLICID"],
     deg: ["5", "10", "11-1/4", "22-1/2", "30", "45", "60", "90"],
     rad: ["9.5", "12", "18", "24", "36", "48", "60", "72", "84", "96", "108", "120", "180", "240", "360", "720", "1200", "1800"],
   };
+  const COLS = { bender: 5, shift: 2, type: 2, dia: 7, wall: 3, deg: 4, rad: 9 };          // chips per row in each group
+  const groups = {};
   for (const [k, lab] of DIMS) {
     const present = [...new Set(P.view.map(r => String(valOf(r, k) ?? "")).filter(Boolean))];
     let vals = k === "type" ? COMMON.type
       : COMMON[k] ? sortVals(k, [...new Set([...present.filter(v => COMMON[k].includes(v)), ...P.F[k]])])
       : sortVals(k, present);
-    if (k === "deg") vals = sortVals(k, [...new Set([...vals, ...["5", "10", "11-1/4", "22-1/2", "30", "45", "60", "90"]])]);
+    if (k === "deg") vals = sortVals(k, [...new Set([...vals, ...COMMON.deg])]);
     if (k === "bender") vals = sortVals(k, [...new Set([...vals, ...["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]])]);   // all 10 benders, even before 9 and 10 have data
     if (vals.length < 2 && !P.F[k].length && k !== "type") continue;
-    const chip = v => h("button", { class: "chip2", "aria-pressed": P.F[k].includes(v) ? "true" : "false",
+    const n = P.F[k].length;
+    const chip = v => h("button", { type: "button", class: "chip2", "aria-pressed": P.F[k].includes(v) ? "true" : "false",
       onclick: () => { P.F[k] = P.F[k].includes(v) ? P.F[k].filter(x => x !== v) : [...P.F[k], v]; onChange(); } }, label(k, v));
-    const rows = (groups) => h("div", {}, ...groups.filter(g => g.length).map(g => h("div", { class: "chips chiprow" }, ...g.map(chip))));
-    let box;
-    if (k === "wall") box = rows([vals.filter(v => ["SW", "MW", "HW", "XW"].includes(v)), vals.filter(v => !["SW", "MW", "HW", "XW"].includes(v))]);
-    else if (k === "bender") { const g = []; for (let i = 0; i < vals.length; i += 4) g.push(vals.slice(i, i + 4)); box = rows(g); }
-    else if (k === "type") box = rows([vals.slice(0, 2), vals.slice(2)]);
-    else box = h("div", { class: "chips" }, ...vals.map(chip));
-    rail.append(h("div", { class: "rail-label" }, lab), box);
+    const g = h("div", { class: "fgroup", role: "group", "aria-label": lab },
+      h("div", { class: "fglabel" }, h("span", {}, lab), n ? h("b", {}, n) : null,
+        n ? h("button", { type: "button", class: "text-btn fgclear", onclick: () => { P.F[k] = []; onChange(); } }, "Clear") : null),
+      h("div", { class: "cgrid", style: `--cols:${Math.min(COLS[k], vals.length)}` }, ...vals.map(chip)));
     if (k === "deg" || k === "rad") {                 // any other value: type it
       const others = present.filter(v => !vals.includes(v) && /^\d+(\.\d+)?$|^\d+-\d+\/\d+$/.test(v));
-      const dl = h("datalist", { id: "dl-other-" + k }, ...others.map(v => h("option", { value: v })));
       const inp = h("input", { type: "search", class: "othersearch", list: "dl-other-" + k, placeholder: k === "deg" ? "Other degree…" : "Other radius…", "aria-label": k === "deg" ? "Find another degree" : "Find another radius" });
       inp.addEventListener("change", () => {
         const v = inp.value.replace(/[°"\s]/g, ""); if (!v) return;
@@ -2358,47 +2453,41 @@ function filterRail(onChange) {
         if (!P.F[k].includes(v)) P.F[k] = [...P.F[k], v];
         onChange();
       });
-      rail.append(inp, dl);
+      g.append(inp, h("datalist", { id: "dl-other-" + k }, ...others.map(v => h("option", { value: v }))));
     }
+    groups[k] = g;
   }
-  // lay the groups out side by side in a bar that opens and closes
-  const groups = new Map(); let grp = null;
-  for (const k of [...rail.childNodes]) {
-    if (k.classList && k.classList.contains("rail-label")) { grp = h("div", { class: "fgroup" }); groups.set(k.textContent, grp); }
-    if (grp) grp.append(k);
-  }
-  const COLS = { Bender: 5, Shift: 2, Type: 2, Diameter: 6, Wall: 3, Degree: "half", Radius: "half" };   // "half" = two even rows
-  for (const [name, g] of groups) {
-    const chips = COLS[name] ? [...g.querySelectorAll(".chip2")] : [];
-    if (!chips.length) continue;
-    const n = COLS[name] === "half" ? Math.max(1, Math.ceil(chips.length / 2)) : COLS[name];
-    const grid = h("div", { class: "cgrid", style: `grid-template-columns:repeat(${n},minmax(0,1fr))` }, ...chips);
-    for (const c of [...g.children]) if (c.tagName === "DIV" && !c.classList.contains("rail-label") && !c.querySelector(".chip2")) c.remove();
-    g.insertBefore(grid, g.children[1] || null);
-  }
-  const ROWS = [["Search", "Dates", "Bender", "Shift"], ["Type", "Diameter", "Wall"], ["Degree", "Radius"]];
-  const dl = groups.get("Dates") && groups.get("Dates").querySelector(".rail-label"); if (dl) dl.remove();   // the From and To pickers carry their own labels
-  const body = h("div", { class: "fbody" }, ...ROWS.map((r, i) => { const gs = r.filter(n => groups.has(n));
-    return gs.length ? h("div", { class: "frow r" + (i + 1) + (gs.length < r.length ? " partial" : "") }, ...gs.map(n => groups.get(n))) : null; }));
-  const active = DIMS.reduce((n, [k]) => n + P.F[k].length, 0) + P.F.item.length + ((P.F.q || "").trim() ? 1 : 0)
-    + (P.F.from && P.F.from !== P.dates[0] || P.F.to && P.F.to !== P.lastDate ? 1 : 0);
+  const ROWS = [["bender", "shift", "type"], ["dia", "wall"], ["deg", "rad"]];
+  const body = h("div", { class: "fbody", id: "fbody" }, ...ROWS.map((r, i) => { const gs = r.filter(k => groups[k]);
+    return gs.length ? h("div", { class: "frow r" + (i + 1) + (gs.length < r.length ? " partial" : "") }, ...gs.map(k => groups[k])) : null; }));
+
+  const q = h("input", { type: "search", class: "fsearch", placeholder: "Search item, SO # or size", value: P.F.q, "aria-label": "Search records" });
+  q.addEventListener("change", () => { clearTimeout(filterRail.t); if (P.F.q === q.value) return; P.F.q = q.value; onChange(); });
+  // ...and also as you type, 300 ms after the last key. The page is redrawn, so the cursor is put back in the new box.
+  q.addEventListener("input", () => { clearTimeout(filterRail.t); filterRail.t = setTimeout(() => {
+    if (P.F.q === q.value) return;
+    P.F.q = q.value; onChange();
+    const box = document.querySelector(".page:not(.hidden) .fsearch");
+    if (box) { box.focus(); box.setSelectionRange(box.value.length, box.value.length); }
+  }, 300); });
+
+  const parts = DIMS.reduce((n, [k]) => n + P.F[k].length, 0) + P.F.item.length;
+  const ranged = P.F.from && P.F.from !== P.dates[0] || P.F.to && P.F.to !== P.lastDate;
   const open = !!P.fOpen;
-  const bar = h("section", { class: "frail top" + (open ? " open" : "") },
-    h("div", { class: "fhead" },
-      h("button", { class: "ftoggle", "aria-expanded": open ? "true" : "false", onclick: () => { P.fOpen = !open; onChange(); } },
-        h("span", {}, "Filters"), active ? h("b", { class: "fcount" }, active) : null, h("span", { class: "chev" }, open ? "▴" : "▾")),
-      h("span", { class: "save-note" }, `${L.fmtDate(P.F.from)} – ${L.fmtDate(P.F.to)}${active ? "" : "  ·  no filters"}`),
-      h("button", { class: "quiet-btn fclear", onclick: () => { Object.assign(P.F, emptyDims(), { q: "", from: P.dates[0], to: P.lastDate }); P.open = new Set(); onChange(); } }, "Clear filters")),
-    open ? body : null);
-  return bar;
-}
-function activeChips(onChange) {
   const chips = [];
-  const show = (k, v) => k === "shift" ? (+v === 1 ? "Day" : "Night") : k === "type" ? prettyType(v) : v;
+  const show = (k, v) => k === "shift" ? (+v === 1 ? "Day" : "Night") : k === "type" ? prettyType(v) : label(k, v);
   for (const [k, lab] of [...DIMS, ["item", "Item"]]) for (const v of P.F[k])
-    chips.push(h("button", { class: "fchip", title: "Remove", onclick: () => { P.F[k] = P.F[k].filter(x => x !== v); onChange(); } }, `${lab}: ${show(k, v)} ×`));
-  if (P.F.q) chips.push(h("button", { class: "fchip", onclick: () => { P.F.q = ""; onChange(); } }, `"${P.F.q}" ×`));
-  return h("div", { class: "fchips" }, h("span", { class: "rl" }, `${P.F.from ? L.fmtDate(P.F.from) : "…"} – ${P.F.to ? L.fmtDate(P.F.to) : "…"}`), ...chips);
+    chips.push(h("button", { type: "button", class: "fchip", "aria-label": `Remove ${lab} ${show(k, v)}`, onclick: () => { P.F[k] = P.F[k].filter(x => x !== v); onChange(); } },
+      h("span", { class: "fchip-k" }, lab), show(k, v), h("i", { "aria-hidden": "true" }, "×")));
+  return h("section", { class: "frail top" + (open ? " open" : "") },
+    h("div", { class: "fhead" },
+      h("button", { type: "button", class: "ftoggle", "aria-expanded": open ? "true" : "false", "aria-controls": "fbody", onclick: () => { P.fOpen = !open; onChange(); } },
+        h("span", {}, "Filters"), parts ? h("b", { class: "fcount" }, parts) : null, h("span", { class: "chev", "aria-hidden": "true" }, "▾")),
+      rangePick(P.F.from, P.F.to, (a, b) => { P.F.from = a; P.F.to = b; onChange(); }),
+      q,
+      chips.length ? h("div", { class: "fchips" }, ...chips) : null,
+      parts || ranged || P.F.q ? h("button", { type: "button", class: "text-btn fclear", onclick: () => { Object.assign(P.F, emptyDims(), { q: "", from: P.dates[0], to: P.lastDate }); P.open = new Set(); onChange(); } }, "Clear all") : null),
+    open ? body : null);
 }
 
 /* ============================== Production Log ============================== */
@@ -2455,7 +2544,7 @@ function renderLog() {
       P.canWrite ? h("button", { class: "save-btn addrec", onclick: () => openRecord(null) }, "+ Add record") : null,
       h("button", { class: "ghost-btn", onclick: () => exportCsv(sorted) }, "Export CSV"))),
     kpis(a, [[fmt(a.runs), "Runs"]]));
-  const main = h("div", { class: "lmain" }, activeChips(renderLog),
+  const main = h("div", { class: "lmain" },
     h("div", { class: "card" },
       h("div", { class: "card-head" }, h("label", { class: "groupby" }, "Group by", groupSel),
         h("span", { class: "save-note" }, P.group ? "Click a group to open its records. Edit changes, deletes or moves a record." : `${rows.length.toLocaleString()} records. Click one for its details; Edit changes or deletes it.`)),
@@ -2880,8 +2969,7 @@ function renderOEE() {
   const rows = oeeRows(from, to), a = oeeAgg(rows), std = P.oeeStd;
   const rangeBar = h("div", { class: "rangebar" },
     h("div", { class: "seg" }, ...[["7", "7 days"], ["30", "30 days"]].map(([m, lab]) => h("button", { "aria-pressed": E.mode === m ? "true" : "false", onclick: () => { E.mode = m; renderOEE(); } }, lab))),
-    datePick("From", from, v => { E.mode = "custom"; E.from = v; E.to = to; renderOEE(); }),
-    datePick("To", to, v => { E.mode = "custom"; E.from = from; E.to = v; renderOEE(); }));
+    rangePick(from, to, (a, b, preset) => { E.mode = preset || "custom"; E.from = a; E.to = b; renderOEE(); }, sdates));
   const kpi = (v, l, alert) => h("div", { class: "kpi" + (alert ? " alert" : "") }, h("b", {}, v), h("span", {}, l));
   const benders = [...new Set(rows.map(r => r.bender))].sort((x, y) => x - y);
   const tr = (lab, sh, x, strong) => h("tr", { class: strong ? "total" : "" }, h("td", {}, strong ? h("b", {}, lab) : lab), h("td", {}, sh), h("td", { class: "num" }, x.n),
@@ -3008,7 +3096,7 @@ function init() {
   // Redraw the charts when the window's WIDTH changes. Height-only changes are ignored: on a phone the address bar
   // sliding away fires "resize" on every scroll, which used to redraw the whole page while scrolling.
   let rt, lastWidth = window.innerWidth;
-  window.addEventListener("resize", () => { if (window.innerWidth === lastWidth) return; lastWidth = window.innerWidth; clearTimeout(rt); rt = setTimeout(render, 200); });
+  window.addEventListener("resize", () => { if (window.innerWidth === lastWidth) return; lastWidth = window.innerWidth; calClose(); clearTimeout(rt); rt = setTimeout(render, 200); });
   show("overview");   // always open on Overview; an unfinished import waits on the Upload page
   window.CFIAuth.whenSignedIn(connect);
 }
